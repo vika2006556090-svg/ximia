@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Юный химик – Лаборатория реакций</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #2a1b38;
+            font-family: 'Quicksand', sans-serif;
+            color: #f0eef7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #e7d9ff;
+        }
+
+        .card {
+            background: #3f2c56;
+            border-radius: 32px;
+            padding: 1.8rem;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .mixer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        select {
+            background: #2c1e3c;
+            border: 1px solid #8866aa;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .mixer span {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        button {
+            background: #b794f4;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            border-radius: 60px;
+            color: #1f122e;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #c9abff;
+            transform: scale(0.97);
+        }
+
+        .result {
+            background: #231b32;
+            border-radius: 28px;
+            padding: 18px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            border-left: 5px solid #b794f4;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .nav-btn {
+            background: #a27bce;
+            border: none;
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            border-radius: 60px;
+            color: #1f122e;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #c9abff;
+            transform: scale(0.97);
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 2rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 650px) {
+            body { padding: 16px; }
+            h1 { font-size: 1.8rem; }
+            .mixer { flex-direction: column; }
+            .mixer span { text-align: center; }
+            select, button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Лаборатория Реакций</h1>
+    <h2>Смешивайте элементы</h2>
+
+    <div class="card">
+        <div class="mixer">
+            <select id="elementA"></select>
+            <span>+</span>
+            <select id="elementB"></select>
+        </div>
+        <button id="mixButton">Смешать</button>
+        <div id="reactionResult" class="result">🌟 Нажмите «Смешать»</div>
+    </div>
+
+    <div class="nav-links">
+        <a href="index.html" class="nav-btn">← Таблица элементов</a>
+        <a href="journal.html" class="nav-btn">Журнал реакций →</a>
+    </div>
+    <footer>только успешные реакции сохраняются в журнал</footer>
+</div>
+
+<script>
+    // Элементы (полностью совпадают с первой страницей)
+    const elements = [
+        { symbol: "H", name: "Водород" }, { symbol: "He", name: "Гелий" }, { symbol: "Li", name: "Литий" },
+        { symbol: "Be", name: "Бериллий" }, { symbol: "B", name: "Бор" }, { symbol: "C", name: "Углерод" },
+        { symbol: "N", name: "Азот" }, { symbol: "O", name: "Кислород" }, { symbol: "F", name: "Фтор" },
+        { symbol: "Ne", name: "Неон" }, { symbol: "Na", name: "Натрий" }, { symbol: "Mg", name: "Магний" },
+        { symbol: "Al", name: "Алюминий" }, { symbol: "Si", name: "Кремний" }, { symbol: "P", name: "Фосфор" },
+        { symbol: "S", name: "Сера" }, { symbol: "Cl", name: "Хлор" }, { symbol: "Ar", name: "Аргон" },
+        { symbol: "K", name: "Калий" }, { symbol: "Ca", name: "Кальций" }
+    ];
+
+    // Таблица успешных реакций (с образованием соединения)
+    const reactions = {
+        "H-H": "💧 Водород H₂", "O-O": "🌬️ Кислород O₂", "H-O": "💦 Вода H₂O",
+        "H-Cl": "🧪 Хлороводород HCl", "Na-Cl": "🧂 Хлорид натрия NaCl", "C-O": "🌿 Углекислый газ CO₂",
+        "C-H": "🔥 Метан CH₄", "Na-O": "⚪ Оксид натрия Na₂O", "Mg-O": "✨ Оксид магния MgO",
+        "Ca-O": "🪨 Оксид кальция CaO", "Al-O": "💎 Оксид алюминия Al₂O₃", "Si-O": "⌛ Диоксид кремния SiO₂",
+        "S-O": "⚠️ Диоксид серы SO₂", "N-O": "🌫️ Оксид азота NO", "H-N": "💨 Аммиак NH₃",
+        "H-S": "🥚 Сероводород H₂S", "K-O": "🔥 Оксид калия K₂O", "Ca-Cl": "🧴 Хлорид кальция CaCl₂"
+    };
+
+    function getReactionKey(a, b) {
+        if (a === b) return `${a}-${a}`;
+        let [first, second] = [a, b].sort();
+        return `${first}-${second}`;
+    }
+
+    function isSuccessfulReaction(sym1, sym2) {
+        let key = getReactionKey(sym1, sym2);
+        return reactions.hasOwnProperty(key);
+    }
+
+    function getReactionText(sym1, sym2) {
+        let key = getReactionKey(sym1, sym2);
+        if (reactions[key]) return reactions[key];
+        if (sym1 === sym2) return `✨ Молекула ${sym1}₂ (простое вещество)`;
+        return null; // неуспешная реакция (просто смесь)
+    }
+
+    // Заполнение селектов
+    const selA = document.getElementById('elementA');
+    const selB = document.getElementById('elementB');
+    elements.forEach(el => {
+        let opt1 = new Option(`${el.symbol} – ${el.name}`, el.symbol);
+        let opt2 = new Option(`${el.symbol} – ${el.name}`, el.symbol);
+        selA.appendChild(opt1);
+        selB.appendChild(opt2);
+    });
+    selA.value = "H";
+    selB.value = "O";
+
+    const mixBtn = document.getElementById('mixButton');
+    const resultDiv = document.getElementById('reactionResult');
+
+    function saveToJournal(reactionText, el1, el2) {
+        let journal = JSON.parse(localStorage.getItem('chemistryJournal')) || [];
+        let newEntry = {
+            timestamp: new Date().toLocaleString(),
+            reactants: `${el1} + ${el2}`,
+            product: reactionText
+        };
+        journal.unshift(newEntry); // свежие сверху
+        localStorage.setItem('chemistryJournal', JSON.stringify(journal));
+    }
+
+    mixBtn.addEventListener('click', () => {
+        let a = selA.value;
+        let b = selB.value;
+        let product = getReactionText(a, b);
+        if (product) {
+            // успешная реакция (есть соединение)
+            let fullText = `🧪 Реакция: ${a} + ${b} → ${product}`;
+            resultDiv.innerHTML = fullText;
+            saveToJournal(product, a, b);
+        } else {
+            resultDiv.innerHTML = `❌ Смесь ${a} и ${b} не дала нового вещества. Попробуйте другие элементы.`;
+        }
+    });
+</script>
+</body>
+</html>

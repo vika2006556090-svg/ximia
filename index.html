@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Юный химик – Таблица элементов</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #2a1b38;
+            font-family: 'Quicksand', sans-serif;
+            color: #f0eef7;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            word-break: break-word;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.2rem;
+            color: #e7d9ff;
+        }
+
+        .card {
+            background: #3f2c56;
+            border-radius: 32px;
+            padding: 1.2rem;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.8rem;
+        }
+
+        .element-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+            gap: 12px;
+        }
+
+        .element-tile {
+            background: #2c1e3c;
+            border-radius: 24px;
+            text-align: center;
+            padding: 14px 6px;
+            font-weight: 600;
+            border: 1px solid #6e4f8a;
+            transition: 0.1s linear;
+            cursor: pointer;
+            /* увеличиваем область касания */
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .atomic-number {
+            font-size: 0.85rem;
+            font-weight: 800;
+            background: #6e4f8a;
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 40px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            color: #f0eef7;
+            width: fit-content;
+            align-self: center;
+        }
+
+        .element-symbol {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .element-name {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-top: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .nav-btn {
+            background: #b794f4;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            border-radius: 60px;
+            color: #1f122e;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.2s;
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .nav-btn:hover {
+            background: #c9abff;
+            transform: scale(0.97);
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 1.5rem;
+            opacity: 0.6;
+        }
+
+        /* Мобильная версия – до 550px */
+        @media (max-width: 550px) {
+            body {
+                padding: 12px;
+            }
+            h1 {
+                font-size: 1.7rem;
+            }
+            h2 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+            .card {
+                padding: 1rem;
+                border-radius: 28px;
+            }
+            .element-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 10px;
+            }
+            .element-tile {
+                padding: 10px 4px;
+                min-height: 90px;
+            }
+            .atomic-number {
+                font-size: 0.7rem;
+                padding: 2px 8px;
+                margin-bottom: 5px;
+            }
+            .element-symbol {
+                font-size: 1.3rem;
+            }
+            .element-name {
+                font-size: 0.65rem;
+            }
+            .nav-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                min-width: 140px;
+            }
+        }
+
+        /* очень узкие экраны ( < 380px) */
+        @media (max-width: 380px) {
+            .element-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
+            .element-tile {
+                padding: 8px 2px;
+            }
+            .element-symbol {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Таблица Элементов</h1>
+
+    <div class="card">
+        <div class="element-grid" id="elementGrid"></div>
+    </div>
+
+    <div class="nav-links">
+        <a href="react.html" class="nav-btn">Перейти к реакциям →</a>
+        <a href="journal.html" class="nav-btn">Журнал реакций</a>
+    </div>
+    <footer>юный химик • периодическая система</footer>
+</div>
+
+<script>
+    const elements = [
+        { number: 1,  symbol: "H",  name: "Водород" },
+        { number: 2,  symbol: "He", name: "Гелий" },
+        { number: 3,  symbol: "Li", name: "Литий" },
+        { number: 4,  symbol: "Be", name: "Бериллий" },
+        { number: 5,  symbol: "B",  name: "Бор" },
+        { number: 6,  symbol: "C",  name: "Углерод" },
+        { number: 7,  symbol: "N",  name: "Азот" },
+        { number: 8,  symbol: "O",  name: "Кислород" },
+        { number: 9,  symbol: "F",  name: "Фтор" },
+        { number: 10, symbol: "Ne", name: "Неон" },
+        { number: 11, symbol: "Na", name: "Натрий" },
+        { number: 12, symbol: "Mg", name: "Магний" },
+        { number: 13, symbol: "Al", name: "Алюминий" },
+        { number: 14, symbol: "Si", name: "Кремний" },
+        { number: 15, symbol: "P",  name: "Фосфор" },
+        { number: 16, symbol: "S",  name: "Сера" },
+        { number: 17, symbol: "Cl", name: "Хлор" },
+        { number: 18, symbol: "Ar", name: "Аргон" },
+        { number: 19, symbol: "K",  name: "Калий" },
+        { number: 20, symbol: "Ca", name: "Кальций" }
+    ];
+
+    const grid = document.getElementById('elementGrid');
+    elements.forEach(el => {
+        const tile = document.createElement('div');
+        tile.className = 'element-tile';
+        tile.innerHTML = `
+            <div class="atomic-number">${el.number}</div>
+            <div class="element-symbol">${el.symbol}</div>
+            <div class="element-name">${el.name}</div>
+        `;
+        grid.appendChild(tile);
+    });
+</script>
+</body>
+</html>

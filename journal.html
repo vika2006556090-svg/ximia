@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Юный химик – Журнал реакций</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #2a1b38;
+            font-family: 'Quicksand', sans-serif;
+            color: #f0eef7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #e7d9ff;
+        }
+
+        .card {
+            background: #3f2c56;
+            border-radius: 32px;
+            padding: 1.5rem;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .journal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 55vh;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .entry {
+            background: #2c1e3c;
+            border-radius: 28px;
+            padding: 14px 20px;
+            border-left: 6px solid #b794f4;
+        }
+
+        .entry-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-bottom: 6px;
+        }
+
+        .entry-reaction {
+            font-weight: 600;
+            font-size: 1rem;
+            word-break: break-word;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .clear-btn {
+            background: #b794f4;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            border-radius: 60px;
+            color: #1f122e;
+            cursor: pointer;
+            margin-top: 10px;
+            width: auto;
+            display: inline-block;
+        }
+
+        .clear-btn:hover {
+            background: #c9abff;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .nav-btn {
+            background: #a27bce;
+            border: none;
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            border-radius: 60px;
+            color: #1f122e;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #c9abff;
+            transform: scale(0.97);
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 2rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 650px) {
+            body { padding: 16px; }
+            h1 { font-size: 1.8rem; }
+            .entry { padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Журнал Успешных Реакций</h1>
+    <h2>Только химические соединения</h2>
+
+    <div class="card">
+        <div id="journalContent" class="journal-list">
+            <!-- записи будут добавлены через js -->
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="clearJournal" class="clear-btn">Очистить журнал</button>
+        </div>
+    </div>
+
+    <div class="nav-links">
+        <a href="index.html" class="nav-btn">← Таблица элементов</a>
+        <a href="react.html" class="nav-btn">Лаборатория реакций →</a>
+    </div>
+    <footer>сохраняются только реакции, образовавшие новое вещество</footer>
+</div>
+
+<script>
+    function renderJournal() {
+        const journal = JSON.parse(localStorage.getItem('chemistryJournal')) || [];
+        const container = document.getElementById('journalContent');
+        if (!container) return;
+
+        if (journal.length === 0) {
+            container.innerHTML = '<div class="empty-message">📭 Пока нет успешных реакций. Смешайте элементы на странице "Лаборатория реакций".</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        journal.forEach(entry => {
+            const div = document.createElement('div');
+            div.className = 'entry';
+            div.innerHTML = `
+                <div class="entry-time">${entry.timestamp}</div>
+                <div class="entry-reaction">🧪 ${entry.reactants} → ${entry.product}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function clearJournal() {
+        localStorage.removeItem('chemistryJournal');
+        renderJournal();
+    }
+
+    document.getElementById('clearJournal')?.addEventListener('click', clearJournal);
+    renderJournal();
+</script>
+</body>
+</html>
